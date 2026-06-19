@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#4CAF50" />
+  <title>Invoer – Mijn Gezondheid</title>
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+  <header>
+    <h1 id="appNaam">Mijn Gezondheid</h1>
+    <button onclick="taalWisselen()">🌐 NL / EN</button>
+  </header>
+
+  <nav>
+    <a href="/index.html" data-i18n="nav.home">🏠 Home</a>
+    <a href="/invoer.html" data-i18n="nav.invoer">➕ Invoer</a>
+    <a href="/overzicht.html" data-i18n="nav.overzicht">📋 Overzicht</a>
+  </nav>
+
+  <main>
+    <h2 data-i18n="invoer.titel">Nieuw item toevoegen</h2>
+
+    <form id="gezondheidForm">
+
+      <label for="datum" data-i18n="form.datum">Datum</label>
+      <input type="date" id="datum" required />
+
+      <label for="categorie" data-i18n="form.categorie">Categorie</label>
+      <select id="categorie" required>
+        <option value="" data-i18n="form.kies">-- Kies --</option>
+        <option value="voeding" data-i18n="cat.voeding">Voeding</option>
+        <option value="beweging" data-i18n="cat.beweging">Beweging</option>
+        <option value="slaap" data-i18n="cat.slaap">Slaap</option>
+        <option value="water" data-i18n="cat.water">Water</option>
+      </select>
+
+      <label for="omschrijving" data-i18n="form.omschrijving">Omschrijving</label>
+      <input type="text" id="omschrijving" required />
+
+      <label for="waarde" data-i18n="form.waarde">Waarde</label>
+      <input type="number" id="waarde" min="0" required />
+      <span id="eenheid">kcal</span>
+
+      <p id="foutmelding" class="fout" style="display:none;" data-i18n="form.fout">Vul alle velden in.</p>
+
+      <button type="submit" data-i18n="form.opslaan">Opslaan</button>
+      <button type="reset" data-i18n="form.wissen">Wissen</button>
+
+    </form>
+  </main>
+
+  <footer>
+    <p>© 2025 Mijn Gezondheid</p>
+  </footer>
+
+  <script src="/js/taal.js"></script>
+  <script src="/js/opslag.js"></script>
+  <script src="/js/invoer.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js');
+    }
+  </script>
+
+</body>
+</html>

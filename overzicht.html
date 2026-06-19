@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#4CAF50" />
+  <title>Overzicht – Mijn Gezondheid</title>
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+  <header>
+    <h1 id="appNaam">Mijn Gezondheid</h1>
+    <button onclick="taalWisselen()">🌐 NL / EN</button>
+  </header>
+
+  <nav>
+    <a href="/index.html" data-i18n="nav.home">🏠 Home</a>
+    <a href="/invoer.html" data-i18n="nav.invoer">➕ Invoer</a>
+    <a href="/overzicht.html" data-i18n="nav.overzicht">📋 Overzicht</a>
+  </nav>
+
+  <main>
+    <h2 data-i18n="overzicht.titel">Overzicht</h2>
+
+    <!-- Filter per periode (F2) -->
+    <div class="filters">
+      <button onclick="filterPeriode('dag')" data-i18n="periode.dag">Dag</button>
+      <button onclick="filterPeriode('week')" data-i18n="periode.week">Week</button>
+      <button onclick="filterPeriode('maand')" data-i18n="periode.maand">Maand</button>
+    </div>
+
+    <ul id="itemsLijst">
+      <li data-i18n="overzicht.leeg">Geen items gevonden.</li>
+    </ul>
+
+    <!-- Alles wissen (F3) -->
+    <button class="wis-knop" onclick="allesWissen()" data-i18n="overzicht.wissen">🗑 Alles wissen</button>
+  </main>
+
+  <footer>
+    <p>© 2025 Mijn Gezondheid</p>
+  </footer>
+
+  <script src="/js/taal.js"></script>
+  <script src="/js/opslag.js"></script>
+  <script src="/js/overzicht.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js');
+    }
+  </script>
+
+</body>
+</html>

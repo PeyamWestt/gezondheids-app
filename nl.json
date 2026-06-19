@@ -1,0 +1,41 @@
+{
+  "nav": {
+    "home": "🏠 Home",
+    "invoer": "➕ Invoer",
+    "overzicht": "📋 Overzicht"
+  },
+  "home": {
+    "titel": "Vandaag",
+    "recent": "Recent toegevoegd",
+    "leeg": "Nog niets toegevoegd vandaag."
+  },
+  "invoer": {
+    "titel": "Nieuw item toevoegen"
+  },
+  "overzicht": {
+    "titel": "Overzicht",
+    "leeg": "Geen items gevonden.",
+    "wissen": "🗑 Alles wissen"
+  },
+  "cat": {
+    "voeding": "Voeding",
+    "beweging": "Beweging",
+    "slaap": "Slaap",
+    "water": "Water"
+  },
+  "form": {
+    "datum": "Datum",
+    "categorie": "Categorie",
+    "kies": "-- Kies --",
+    "omschrijving": "Omschrijving",
+    "waarde": "Waarde",
+    "opslaan": "Opslaan",
+    "wissen": "Wissen",
+    "fout": "Vul alle velden in."
+  },
+  "periode": {
+    "dag": "Dag",
+    "week": "Week",
+    "maand": "Maand"
+  }
+}

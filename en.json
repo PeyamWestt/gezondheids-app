@@ -1,0 +1,42 @@
+{
+  "nav": {
+    "home": "🏠 Home",
+    "invoer": "➕ Add",
+    "overzicht": "📋 Overview"
+  },
+  "home": {
+    "titel": "Today",
+    "recent": "Recently added",
+    "leeg": "Nothing added today yet."
+  },
+  "invoer": {
+    "titel": "Add new item"
+  },
+  "overzicht": {
+    "titel": "Overview",
+    "leeg": "No items found.",
+    "wissen": "🗑 Clear all"
+  },
+  "cat": {
+    "voeding": "Nutrition",
+    "beweging": "Exercise",
+    "slaap": "Sleep",
+    "water": "Water"
+  },
+  "form": {
+    "datum": "Date",
+    "categorie": "Category",
+    "kies": "-- Choose --",
+    "omschrijving": "Description",
+    "waarde": "Value",
+    "opslaan": "Save",
+    "wissen": "Clear",
+    "fout": "Please fill in all fields."
+  },
+  "periode": {
+    "dag": "Day",
+    "week": "Week",
+    "maand": "Month"
+  }
+  
+}
