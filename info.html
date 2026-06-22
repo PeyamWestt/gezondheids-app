@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Code Uitleg – Mijn Gezondheid PWA</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f0f4f0;
+      color: #1a1a1a;
+      line-height: 1.7;
+    }
+
+    header {
+      background: #2e7d32;
+      color: white;
+      padding: 30px 40px;
+    }
+
+    header h1 { font-size: 1.8rem; margin-bottom: 6px; }
+    header p  { opacity: 0.85; font-size: 1rem; }
+
+    .inhoud {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 30px 20px 60px;
+    }
+
+    /* Inhoudsopgave */
+    .toc {
+      background: white;
+      border-left: 4px solid #2e7d32;
+      border-radius: 8px;
+      padding: 20px 25px;
+      margin-bottom: 40px;
+    }
+
+    .toc h2 { font-size: 1rem; color: #2e7d32; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .toc ol  { padding-left: 20px; }
+    .toc li  { margin: 5px 0; }
+    .toc a   { color: #2e7d32; text-decoration: none; font-weight: 500; }
+    .toc a:hover { text-decoration: underline; }
+
+    /* Secties */
+    .sectie {
+      background: white;
+      border-radius: 10px;
+      padding: 28px 28px 32px;
+      margin-bottom: 28px;
+      border: 1px solid #e0e0e0;
+    }
+
+    .sectie-label {
+      display: inline-block;
+      background: #e8f5e9;
+      color: #2e7d32;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 1.4rem;
+      color: #1b5e20;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #e8f5e9;
+    }
+
+    h3 {
+      font-size: 1.05rem;
+      color: #2e7d32;
+      margin: 22px 0 8px;
+    }
+
+    p { margin-bottom: 12px; }
+
+    ul, ol {
+      padding-left: 22px;
+      margin-bottom: 12px;
+    }
+
+    li { margin: 5px 0; }
+
+    /* Code blokken */
+    pre {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      border-radius: 8px;
+      padding: 18px 20px;
+      overflow-x: auto;
+      font-size: 0.88rem;
+      line-height: 1.6;
+      margin: 14px 0;
+      position: relative;
+    }
+
+    code {
+      font-family: 'Consolas', 'Courier New', monospace;
+    }
+
+    /* Inline code */
+    p code, li code {
+      background: #e8f5e9;
+      color: #1b5e20;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+
+    /* Syntax kleuren */
+    .kw  { color: #569cd6; }   /* keywords: var, function, if */
+    .fn  { color: #dcdcaa; }   /* functienamen */
+    .str { color: #ce9178; }   /* strings */
+    .cmt { color: #6a9955; }   /* comments */
+    .num { color: #b5cea8; }   /* getallen */
+    .met { color: #4ec9b0; }   /* methoden: .push .then */
+
+    /* Tip box */
+    .tip {
+      background: #fff8e1;
+      border-left: 4px solid #f9a825;
+      border-radius: 6px;
+      padding: 14px 18px;
+      margin: 14px 0;
+      font-size: 0.95rem;
+    }
+
+    .tip strong { color: #e65100; }
+
+    /* Vergelijking tabel */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0;
+      font-size: 0.9rem;
+    }
+
+    th {
+      background: #2e7d32;
+      color: white;
+      padding: 10px 14px;
+      text-align: left;
+    }
+
+    td {
+      padding: 9px 14px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    tr:nth-child(even) td { background: #f9fbe7; }
+
+    /* Bestandsboom */
+    .boom {
+      background: #1e1e1e;
+      color: #9cdcfe;
+      border-radius: 8px;
+      padding: 18px 20px;
+      font-family: 'Consolas', monospace;
+      font-size: 0.88rem;
+      line-height: 1.8;
+      margin: 14px 0;
+    }
+
+    .boom .map  { color: #dcdcaa; }
+    .boom .bestand { color: #9cdcfe; }
+    .boom .uitleg  { color: #6a9955; }
+
+    /* Stap nummers */
+    .stappen { counter-reset: stap; }
+    .stap {
+      counter-increment: stap;
+      padding: 14px 14px 14px 54px;
+      position: relative;
+      margin: 10px 0;
+      background: #f9fbe7;
+      border-radius: 8px;
+    }
+
+    .stap::before {
+      content: counter(stap);
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 28px;
+      height: 28px;
+      background: #2e7d32;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>📘 Code Uitleg – Mijn Gezondheid PWA</h1>
+  <p>Leer begrijpen wat de code doet én wat je er nog meer mee kunt doen</p>
+</header>
+
+<div class="inhoud">
+
+  <!-- Inhoudsopgave -->
+  <div class="toc">
+    <h2>📋 Inhoudsopgave</h2>
+    <ol>
+      <li><a href="#structuur">Projectstructuur</a></li>
+      <li><a href="#server">server.js – de Express server</a></li>
+      <li><a href="#html">HTML – de pagina's</a></li>
+      <li><a href="#css">style.css – de opmaak</a></li>
+      <li><a href="#opslag">opslag.js – localStorage</a></li>
+      <li><a href="#invoer">invoer.js – het formulier</a></li>
+      <li><a href="#overzicht">overzicht.js – filteren en resetten</a></li>
+      <li><a href="#taal">taal.js – de taalswitch</a></li>
+      <li><a href="#sw">sw.js – offline werken</a></li>
+      <li><a href="#manifest">manifest.json – installeerbaar maken</a></li>
+    </ol>
+  </div>
+
+
+  <!-- 1. STRUCTUUR -->
+  <div class="sectie" id="structuur">
+    <span class="sectie-label">Overzicht</span>
+    <h2>1. Projectstructuur</h2>
+
+    <p>Dit is hoe de bestanden georganiseerd zijn. Elke map en elk bestand heeft een eigen taak:</p>
+
+    <div class="boom">
+<span class="map">pwa/</span>
+├── <span class="bestand">server.js</span>          <span class="uitleg">← Node.js server, draait op je pc</span>
+├── <span class="bestand">package.json</span>       <span class="uitleg">← lijstje van npm-pakketten</span>
+└── <span class="map">public/</span>            <span class="uitleg">← alles hierin is bereikbaar via de browser</span>
+    ├── <span class="bestand">index.html</span>     <span class="uitleg">← de homepagina</span>
+    ├── <span class="bestand">invoer.html</span>    <span class="uitleg">← formulierpagina</span>
+    ├── <span class="bestand">overzicht.html</span> <span class="uitleg">← lijstpagina</span>
+    ├── <span class="bestand">manifest.json</span>  <span class="uitleg">← maakt de app installeerbaar</span>
+    ├── <span class="bestand">sw.js</span>          <span class="uitleg">← service worker voor offline</span>
+    ├── <span class="map">css/</span>
+    │   └── <span class="bestand">style.css</span>  <span class="uitleg">← alle opmaak</span>
+    ├── <span class="map">js/</span>
+    │   ├── <span class="bestand">opslag.js</span>  <span class="uitleg">← localStorage lezen/schrijven</span>
+    │   ├── <span class="bestand">taal.js</span>    <span class="uitleg">← NL/EN wisselen</span>
+    │   ├── <span class="bestand">home.js</span>    <span class="uitleg">← dashboard logica</span>
+    │   ├── <span class="bestand">invoer.js</span>  <span class="uitleg">← formulier verwerken</span>
+    │   └── <span class="bestand">overzicht.js</span> <span class="uitleg">← filteren en resetten</span>
+    ├── <span class="map">locales/</span>
+    │   ├── <span class="bestand">nl.json</span>    <span class="uitleg">← Nederlandse teksten</span>
+    │   └── <span class="bestand">en.json</span>    <span class="uitleg">← Engelse teksten</span>
+    └── <span class="map">icons/</span>
+        ├── <span class="bestand">icon-192.png</span>
+        └── <span class="bestand">icon-512.png</span>
+    </div>
+
+    <div class="tip">
+      <strong>Tip:</strong> De map <code>public/</code> is speciaal. Alles wat daarin staat, kan de browser openen. Bestanden buiten <code>public/</code> (zoals <code>server.js</code>) zijn niet direct bereikbaar vanuit de browser — dat is veiliger.
+    </div>
+  </div>
+
+
+  <!-- 2. SERVER -->
+  <div class="sectie" id="server">
+    <span class="sectie-label">Node.js + Express</span>
+    <h2>2. server.js – de Express server</h2>
+
+    <p>De server is de motor van de app. Hij draait op je pc en stuurt bestanden naar de browser als iemand een pagina opvraagt.</p>
+
+    <pre><code><span class="kw">const</span> express = <span class="fn">require</span>(<span class="str">'express'</span>);
+<span class="kw">const</span> path    = <span class="fn">require</span>(<span class="str">'path'</span>);
+
+<span class="kw">const</span> app = <span class="fn">express</span>();
+
+app.<span class="fn">use</span>(express.<span class="fn">static</span>(path.<span class="fn">join</span>(__dirname, <span class="str">'public'</span>)));
+
+app.<span class="fn">listen</span>(<span class="num">3000</span>, <span class="kw">function</span>() {
+  console.<span class="fn">log</span>(<span class="str">'Server draait op http://localhost:3000'</span>);
+});</code></pre>
+
+    <h3>Wat doet elke regel?</h3>
+
+    <table>
+      <tr><th>Code</th><th>Wat het doet</th></tr>
+      <tr><td><code>require('express')</code></td><td>Laadt het Express pakket in. Zoals een import in Python.</td></tr>
+      <tr><td><code>require('path')</code></td><td>Hulpmiddel voor bestandspaden, werkt op Windows én Mac.</td></tr>
+      <tr><td><code>express()</code></td><td>Maakt een nieuwe server aan en slaat die op in <code>app</code>.</td></tr>
+      <tr><td><code>express.static(...)</code></td><td>Zegt: "alles in de map public mag de browser downloaden".</td></tr>
+      <tr><td><code>app.listen(3000)</code></td><td>Start de server op poort 3000. Poort = een "deur" op je pc.</td></tr>
+    </table>
+
+    <h3>Wat kun je nog meer met Express?</h3>
+    <p>Express kan veel meer dan alleen bestanden sturen. Bijvoorbeeld:</p>
+    <pre><code><span class="cmt">// Een URL aanmaken die data teruggeeft</span>
+app.<span class="fn">get</span>(<span class="str">'/api/hallo'</span>, <span class="kw">function</span>(req, res) {
+  res.<span class="fn">json</span>({ bericht: <span class="str">'Hallo wereld!'</span> });
+});
+
+<span class="cmt">// Data ontvangen die iemand opstuurt (bijv. een formulier)</span>
+app.<span class="fn">post</span>(<span class="str">'/api/opslaan'</span>, <span class="kw">function</span>(req, res) {
+  console.<span class="fn">log</span>(req.body); <span class="cmt">// de verstuurde data</span>
+});</code></pre>
+
+    <div class="tip">
+      <strong>Onthoud:</strong> <code>req</code> = wat de browser <em>vraagt</em>, <code>res</code> = wat de server <em>terugstuurt</em>.
+    </div>
+  </div>
+
+
+  <!-- 3. HTML -->
+  <div class="sectie" id="html">
+    <span class="sectie-label">HTML</span>
+    <h2>3. HTML – de pagina's</h2>
+
+    <p>Elke pagina (<code>index.html</code>, <code>invoer.html</code>, <code>overzicht.html</code>) heeft dezelfde basisopbouw:</p>
+
+    <pre><code><span class="kw">&lt;!DOCTYPE html&gt;</span>
+&lt;<span class="fn">html</span> lang=<span class="str">"nl"</span>&gt;
+&lt;<span class="fn">head</span>&gt;
+  &lt;<span class="fn">meta</span> charset=<span class="str">"UTF-8"</span> /&gt;
+  &lt;<span class="fn">meta</span> name=<span class="str">"viewport"</span> content=<span class="str">"width=device-width, initial-scale=1.0"</span> /&gt;
+  &lt;<span class="fn">link</span> rel=<span class="str">"manifest"</span> href=<span class="str">"/manifest.json"</span> /&gt;
+  &lt;<span class="fn">link</span> rel=<span class="str">"stylesheet"</span> href=<span class="str">"/css/style.css"</span> /&gt;
+&lt;/<span class="fn">head</span>&gt;
+&lt;<span class="fn">body</span>&gt;
+  &lt;<span class="fn">header</span>&gt; ... &lt;/<span class="fn">header</span>&gt;
+  &lt;<span class="fn">nav</span>&gt; ... &lt;/<span class="fn">nav</span>&gt;
+  &lt;<span class="fn">main</span>&gt; ... &lt;/<span class="fn">main</span>&gt;
+  &lt;<span class="fn">footer</span>&gt; ... &lt;/<span class="fn">footer</span>&gt;
+  &lt;<span class="fn">script</span> src=<span class="str">"/js/opslag.js"</span>&gt;&lt;/<span class="fn">script</span>&gt;
+&lt;/<span class="fn">body</span>&gt;
+&lt;/<span class="fn">html</span>&gt;</code></pre>
+
+    <h3>Semantische HTML-elementen</h3>
+    <p>Je gebruikt "semantische" elementen. Dat betekent: de naam van het element vertelt wat erin zit. Dit is beter dan overal <code>&lt;div&gt;</code> gebruiken.</p>
+
+    <table>
+      <tr><th>Element</th><th>Wat het betekent</th><th>Wanneer gebruik je het?</th></tr>
+      <tr><td><code>&lt;header&gt;</code></td><td>Bovenste balk van de pagina</td><td>Logo, titel, knopjes bovenaan</td></tr>
+      <tr><td><code>&lt;nav&gt;</code></td><td>Navigatie</td><td>Links naar andere pagina's</td></tr>
+      <tr><td><code>&lt;main&gt;</code></td><td>Hoofdinhoud</td><td>Het echte inhoud van de pagina</td></tr>
+      <tr><td><code>&lt;section&gt;</code></td><td>Een stuk van de pagina</td><td>Dashboard kaarten, formulier</td></tr>
+      <tr><td><code>&lt;article&gt;</code></td><td>Zelfstandig stukje inhoud</td><td>Een enkel item in een lijst</td></tr>
+      <tr><td><code>&lt;footer&gt;</code></td><td>Onderste deel van de pagina</td><td>Copyright, extra links</td></tr>
+    </table>
+
+    <h3>data-i18n — wat is dat?</h3>
+    <p>Je ziet op veel elementen <code>data-i18n="..."</code>. Dit is een zelfgemaakt attribuut dat <code>taal.js</code> gebruikt om te weten welke tekst vervangen moet worden bij een taalwisseling.</p>
+
+    <pre><code><span class="cmt">&lt;!-- "nav.home" verwijst naar de sleutel in nl.json of en.json --&gt;</span>
+&lt;<span class="fn">a</span> href=<span class="str">"/index.html"</span> data-i18n=<span class="str">"nav.home"</span>&gt;🏠 Home&lt;/<span class="fn">a</span>&gt;</code></pre>
+
+    <div class="tip">
+      <strong>Tip:</strong> Je kunt zelf ook <code>data-</code> attributen verzinnen voor elk doel. Bijv. <code>data-id="5"</code> om een ID op te slaan bij een knop.
+    </div>
+  </div>
+
+
+  <!-- 4. CSS -->
+  <div class="sectie" id="css">
+    <span class="sectie-label">CSS</span>
+    <h2>4. style.css – de opmaak</h2>
+
+    <p>De CSS maakt de app er mooi uit zien. Het is geschreven "mobile-first": je schrijft eerst de stijl voor kleine schermen, en dan pas voor grote schermen met <code>@media</code>.</p>
+
+    <h3>De basis: reset en body</h3>
+    <pre><code><span class="cmt">/* Verwijder standaard marges van de browser */</span>
+* {
+  box-sizing: border-box;  <span class="cmt">/* padding telt mee in de breedte */</span>
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: <span class="str">#f5f5f5</span>;
+  color: <span class="str">#222</span>;
+}</code></pre>
+
+    <h3>Grid – kaarten naast elkaar</h3>
+    <pre><code><span class="cmt">/* Standaard: 2 kolommen op mobiel */</span>
+.kaarten {
+  display: grid;
+  grid-template-columns: 1fr 1fr;  <span class="cmt">/* 2 kolommen van gelijke breedte */</span>
+  gap: 12px;
+}
+
+<span class="cmt">/* Op schermen breder dan 600px: 4 kolommen */</span>
+@media (min-width: 600px) {
+  .kaarten {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}</code></pre>
+
+    <div class="tip">
+      <strong>Wat is 1fr?</strong> "fr" staat voor "fractie". <code>1fr 1fr</code> betekent: verdeel de ruimte in 2 gelijke stukken. <code>repeat(4, 1fr)</code> doet hetzelfde maar dan 4 keer.
+    </div>
+
+    <h3>Flexbox – dingen naast elkaar zetten</h3>
+    <pre><code>header {
+  display: flex;               <span class="cmt">/* zet kinderen naast elkaar */</span>
+  justify-content: space-between; <span class="cmt">/* één links, één rechts */</span>
+  align-items: center;         <span class="cmt">/* verticaal gecentreerd */</span>
+}</code></pre>
+
+    <p>Flexbox vs Grid: gebruik <strong>Flexbox</strong> voor één rij of kolom, gebruik <strong>Grid</strong> voor een heel raster.</p>
+
+    <h3>@media query – responsive design</h3>
+    <pre><code><span class="cmt">/* Dit geldt ALTIJD (mobiel) */</span>
+nav a {
+  font-size: 0.9rem;
+}
+
+<span class="cmt">/* Dit geldt alleen op brede schermen */</span>
+@media (min-width: 600px) {
+  nav a {
+    font-size: 1rem;
+  }
+}</code></pre>
+  </div>
+
+
+  <!-- 5. OPSLAG -->
+  <div class="sectie" id="opslag">
+    <span class="sectie-label">JavaScript</span>
+    <h2>5. opslag.js – localStorage</h2>
+
+    <p>LocalStorage is een opslagplek in de browser. Het werkt zoals een klein kladblok dat de browser bijhoudt, ook als je de pagina sluit. Er is geen server of database voor nodig.</p>
+
+    <h3>Hoe werkt localStorage?</h3>
+    <p>LocalStorage slaat alles op als <strong>tekst</strong>. Maar wij willen lijstjes (arrays) en objecten opslaan. Daarvoor gebruiken we <code>JSON.stringify</code> (object → tekst) en <code>JSON.parse</code> (tekst → object).</p>
+
+    <pre><code><span class="cmt">// Stel je voor: dit is een item</span>
+<span class="kw">var</span> item = { datum: <span class="str">'2025-06-10'</span>, categorie: <span class="str">'voeding'</span>, waarde: <span class="num">500</span> };
+
+<span class="cmt">// Opslaan: object → tekst</span>
+localStorage.<span class="fn">setItem</span>(<span class="str">'mijnSleutel'</span>, JSON.<span class="fn">stringify</span>(item));
+
+<span class="cmt">// Ophalen: tekst → object</span>
+<span class="kw">var</span> opgehaald = JSON.<span class="fn">parse</span>(localStorage.<span class="fn">getItem</span>(<span class="str">'mijnSleutel'</span>));
+
+<span class="cmt">// Verwijderen</span>
+localStorage.<span class="fn">removeItem</span>(<span class="str">'mijnSleutel'</span>);</code></pre>
+
+    <h3>getItems() – alle items ophalen</h3>
+    <pre><code><span class="kw">function</span> <span class="fn">getItems</span>() {
+  <span class="kw">var</span> data = localStorage.<span class="fn">getItem</span>(<span class="str">'gezondheid'</span>);
+  <span class="kw">if</span> (data) {
+    <span class="kw">return</span> JSON.<span class="fn">parse</span>(data);  <span class="cmt">// tekst omzetten naar array</span>
+  }
+  <span class="kw">return</span> [];  <span class="cmt">// als er niks is: geef een lege array terug</span>
+}</code></pre>
+
+    <h3>itemToevoegen() – een item opslaan</h3>
+    <pre><code><span class="kw">function</span> <span class="fn">itemToevoegen</span>(item) {
+  <span class="kw">var</span> items = <span class="fn">getItems</span>();   <span class="cmt">// haal de huidige lijst op</span>
+  item.id = Date.<span class="fn">now</span>();   <span class="cmt">// geef het item een uniek getal als ID</span>
+  items.<span class="fn">push</span>(item);       <span class="cmt">// voeg het toe aan de lijst</span>
+  <span class="fn">saveItems</span>(items);       <span class="cmt">// sla de hele lijst weer op</span>
+}</code></pre>
+
+    <div class="tip">
+      <strong>Wat is Date.now()?</strong> Dit geeft het aantal milliseconden terug sinds 1 januari 1970. Het is altijd een uniek getal, dus perfect als ID.
+    </div>
+
+    <h3>itemResetten() – waarde op 0 zetten</h3>
+    <pre><code><span class="kw">function</span> <span class="fn">itemResetten</span>(id) {
+  <span class="kw">var</span> items = <span class="fn">getItems</span>();
+  <span class="kw">for</span> (<span class="kw">var</span> i = <span class="num">0</span>; i &lt; items.length; i++) {
+    <span class="kw">if</span> (items[i].id == id) {      <span class="cmt">// zoek het juiste item</span>
+      items[i].waarde = <span class="num">0</span>;        <span class="cmt">// zet waarde op 0</span>
+    }
+  }
+  <span class="fn">saveItems</span>(items);              <span class="cmt">// sla op</span>
+}</code></pre>
+
+    <p>De <code>for</code>-lus loopt door de hele lijst heen. <code>i</code> is een teller die begint bij 0. <code>items[i]</code> is het item op plek <code>i</code>.</p>
+
+    <h3>Wat kun je nog meer met localStorage?</h3>
+    <pre><code><span class="cmt">// Alle sleutels bekijken</span>
+<span class="kw">for</span> (<span class="kw">var</span> i = <span class="num">0</span>; i &lt; localStorage.length; i++) {
+  console.<span class="fn">log</span>(localStorage.<span class="fn">key</span>(i));
+}
+
+<span class="cmt">// Controleren of iets bestaat</span>
+<span class="kw">if</span> (localStorage.<span class="fn">getItem</span>(<span class="str">'gebruikersnaam'</span>)) {
+  console.<span class="fn">log</span>(<span class="str">'Gebruiker is bekend'</span>);
+}</code></pre>
+  </div>
+
+
+  <!-- 6. INVOER -->
+  <div class="sectie" id="invoer">
+    <span class="sectie-label">JavaScript</span>
+    <h2>6. invoer.js – het formulier</h2>
+
+    <p>Dit bestand regelt alles rondom het invoerformulier: datum instellen, valideren en opslaan.</p>
+
+    <h3>Datum automatisch invullen</h3>
+    <pre><code><span class="kw">var</span> vandaag = <span class="kw">new</span> Date().<span class="fn">toISOString</span>().<span class="fn">split</span>(<span class="str">'T'</span>)[<span class="num">0</span>];
+document.<span class="fn">getElementById</span>(<span class="str">'datum'</span>).value = vandaag;</code></pre>
+
+    <p>Stap voor stap:</p>
+    <div class="stappen">
+      <div class="stap"><code>new Date()</code> → maakt een datum-object van nu: bijv. <em>Mon Jun 10 2025 14:30:00</em></div>
+      <div class="stap"><code>.toISOString()</code> → maakt er een tekst van: <em>"2025-06-10T14:30:00.000Z"</em></div>
+      <div class="stap"><code>.split('T')</code> → knipt op de T: <em>["2025-06-10", "14:30:00.000Z"]</em></div>
+      <div class="stap"><code>[0]</code> → pakt het eerste deel: <em>"2025-06-10"</em></div>
+    </div>
+
+    <h3>Luisteren naar events</h3>
+    <pre><code>document.<span class="fn">getElementById</span>(<span class="str">'categorie'</span>)
+  .<span class="fn">addEventListener</span>(<span class="str">'change'</span>, <span class="kw">function</span>() {
+    <span class="cmt">// dit wordt uitgevoerd als de dropdown verandert</span>
+    console.<span class="fn">log</span>(<span class="kw">this</span>.value); <span class="cmt">// 'this' = het element zelf</span>
+  });</code></pre>
+
+    <p><code>addEventListener</code> is de manier om te reageren op wat een gebruiker doet. Veelgebruikte events:</p>
+    <table>
+      <tr><th>Event</th><th>Wanneer wordt het getriggerd?</th></tr>
+      <tr><td><code>click</code></td><td>Als iemand ergens op klikt</td></tr>
+      <tr><td><code>submit</code></td><td>Als een formulier wordt verstuurd</td></tr>
+      <tr><td><code>change</code></td><td>Als een dropdown of input verandert</td></tr>
+      <tr><td><code>input</code></td><td>Elke keer als iemand typt</td></tr>
+      <tr><td><code>keydown</code></td><td>Als een toets ingedrukt wordt</td></tr>
+    </table>
+
+    <h3>Formulier valideren</h3>
+    <pre><code>document.<span class="fn">getElementById</span>(<span class="str">'gezondheidForm'</span>)
+  .<span class="fn">addEventListener</span>(<span class="str">'submit'</span>, <span class="kw">function</span>(e) {
+
+  e.<span class="fn">preventDefault</span>(); <span class="cmt">// voorkom dat de pagina herladen wordt</span>
+
+  <span class="kw">var</span> omschrijving = document.<span class="fn">getElementById</span>(<span class="str">'omschrijving'</span>).value.<span class="fn">trim</span>();
+
+  <span class="kw">if</span> (!omschrijving) {
+    <span class="cmt">// veld is leeg: toon foutmelding</span>
+    document.<span class="fn">getElementById</span>(<span class="str">'foutmelding'</span>).style.display = <span class="str">'block'</span>;
+    <span class="kw">return</span>; <span class="cmt">// stop de functie hier</span>
+  }
+
+  <span class="cmt">// alles ok: ga verder</span>
+});</code></pre>
+
+    <div class="tip">
+      <strong>Wat doet .trim()?</strong> Het verwijdert spaties aan het begin en einde van een tekst. Zo telt "   " (alleen spaties) niet als een geldige invoer.
+    </div>
+  </div>
+
+
+  <!-- 7. OVERZICHT -->
+  <div class="sectie" id="overzicht">
+    <span class="sectie-label">JavaScript</span>
+    <h2>7. overzicht.js – filteren en resetten</h2>
+
+    <p>Dit bestand toont de opgeslagen items en filtert ze op dag, week of maand.</p>
+
+    <h3>Filteren op periode</h3>
+    <pre><code><span class="kw">function</span> <span class="fn">toonItems</span>(periode) {
+  <span class="kw">var</span> items = <span class="fn">getItems</span>();
+  <span class="kw">var</span> nu = <span class="kw">new</span> Date();
+  <span class="kw">var</span> gefilterd = [];
+
+  <span class="kw">for</span> (<span class="kw">var</span> i = <span class="num">0</span>; i &lt; items.length; i++) {
+    <span class="kw">var</span> itemDatum = <span class="kw">new</span> Date(items[i].datum);
+
+    <span class="kw">if</span> (periode === <span class="str">'week'</span>) {
+      <span class="kw">var</span> verschil = (nu - itemDatum) / (<span class="num">1000</span> * <span class="num">60</span> * <span class="num">60</span> * <span class="num">24</span>);
+      <span class="cmt">// 1000ms × 60s × 60min × 24u = 1 dag in milliseconden</span>
+      <span class="kw">if</span> (verschil &gt;= <span class="num">0</span> && verschil &lt; <span class="num">7</span>) {
+        gefilterd.<span class="fn">push</span>(items[i]);
+      }
+    }
+  }
+}</code></pre>
+
+    <div class="tip">
+      <strong>Waarom die berekening?</strong> JavaScript rekent datums in milliseconden. Door het verschil te delen door het aantal milliseconden in een dag, krijg je het verschil in dagen.
+    </div>
+
+    <h3>Dynamisch HTML aanmaken</h3>
+    <pre><code><span class="kw">var</span> lijst = document.<span class="fn">getElementById</span>(<span class="str">'itemsLijst'</span>);
+lijst.innerHTML = <span class="str">''</span>; <span class="cmt">// maak de lijst leeg</span>
+
+<span class="kw">for</span> (<span class="kw">var</span> i = <span class="num">0</span>; i &lt; gefilterd.length; i++) {
+  <span class="kw">var</span> li = document.<span class="fn">createElement</span>(<span class="str">'li'</span>); <span class="cmt">// maak een nieuw &lt;li&gt; element</span>
+  li.textContent = gefilterd[i].omschrijving;
+  lijst.<span class="fn">appendChild</span>(li); <span class="cmt">// voeg toe aan de lijst</span>
+}</code></pre>
+
+    <p>Dit is een belangrijk concept: je maakt HTML-elementen met JavaScript en plaatst ze in de pagina. Zo hoef je niet voor elk item een regel HTML te schrijven.</p>
+
+    <h3>Een knop toevoegen aan elk item</h3>
+    <pre><code><span class="kw">var</span> resetKnop = document.<span class="fn">createElement</span>(<span class="str">'button'</span>);
+resetKnop.textContent = <span class="str">'↩ Reset'</span>;
+resetKnop.<span class="fn">setAttribute</span>(<span class="str">'data-id'</span>, item.id); <span class="cmt">// sla het ID op bij de knop</span>
+
+resetKnop.onclick = <span class="kw">function</span>() {
+  <span class="kw">var</span> id = <span class="kw">this</span>.<span class="fn">getAttribute</span>(<span class="str">'data-id'</span>); <span class="cmt">// haal het ID op</span>
+  <span class="fn">itemResetten</span>(id);
+  <span class="fn">toonItems</span>(huidigePeriode); <span class="cmt">// ververs de lijst</span>
+};
+
+li.<span class="fn">appendChild</span>(resetKnop);</code></pre>
+  </div>
+
+
+  <!-- 8. TAAL -->
+  <div class="sectie" id="taal">
+    <span class="sectie-label">JavaScript + JSON</span>
+    <h2>8. taal.js – de taalswitch</h2>
+
+    <p>De taalswitch laadt een JSON-bestand met vertalingen en past alle teksten op de pagina aan.</p>
+
+    <h3>Hoe zit een JSON-bestand eruit?</h3>
+    <pre><code><span class="cmt">// nl.json</span>
+{
+  <span class="str">"nav"</span>: {
+    <span class="str">"home"</span>: <span class="str">"🏠 Home"</span>,
+    <span class="str">"invoer"</span>: <span class="str">"➕ Invoer"</span>
+  },
+  <span class="str">"form"</span>: {
+    <span class="str">"opslaan"</span>: <span class="str">"Opslaan"</span>
+  }
+}</code></pre>
+
+    <p>In de HTML staat dan: <code>data-i18n="nav.home"</code>. De punt scheidt het "hoofdstuk" van de "sleutel".</p>
+
+    <h3>fetch() – een bestand ophalen</h3>
+    <pre><code><span class="kw">function</span> <span class="fn">taalLaden</span>(taal) {
+  <span class="fn">fetch</span>(<span class="str">'/locales/'</span> + taal + <span class="str">'.json'</span>)  <span class="cmt">// vraag het bestand op</span>
+    .<span class="fn">then</span>(<span class="kw">function</span>(res) {
+      <span class="kw">return</span> res.<span class="fn">json</span>();   <span class="cmt">// zet de tekst om naar een object</span>
+    })
+    .<span class="fn">then</span>(<span class="kw">function</span>(data) {
+      vertalingen = data;  <span class="cmt">// sla de vertalingen op</span>
+      <span class="fn">taalToepassen</span>();     <span class="cmt">// pas alle teksten aan</span>
+    });
+}</code></pre>
+
+    <div class="tip">
+      <strong>Wat is .then()?</strong> <code>fetch</code> is asynchroon — het duurt even voor het bestand binnenkomt. <code>.then()</code> zegt: "als het klaar is, doe dan dit". De ene <code>.then</code> geeft de data door aan de volgende.
+    </div>
+
+    <h3>Alle teksten vervangen</h3>
+    <pre><code><span class="kw">function</span> <span class="fn">taalToepassen</span>() {
+  <span class="cmt">// zoek alle elementen met een data-i18n attribuut</span>
+  <span class="kw">var</span> elementen = document.<span class="fn">querySelectorAll</span>(<span class="str">'[data-i18n]'</span>);
+
+  <span class="kw">for</span> (<span class="kw">var</span> i = <span class="num">0</span>; i &lt; elementen.length; i++) {
+    <span class="kw">var</span> sleutel = elementen[i].<span class="fn">getAttribute</span>(<span class="str">'data-i18n'</span>); <span class="cmt">// bijv. "nav.home"</span>
+    <span class="kw">var</span> tekst   = <span class="fn">vertaling</span>(sleutel);                     <span class="cmt">// zoek de vertaling op</span>
+    <span class="kw">if</span> (tekst) {
+      elementen[i].textContent = tekst;                    <span class="cmt">// vervang de tekst</span>
+    }
+  }
+}</code></pre>
+
+    <p><code>querySelectorAll('[data-i18n]')</code> werkt als een CSS-selector. Je kunt hier elk CSS-patroon gebruiken, bijv. <code>'.kaart'</code> of <code>'#mijnId'</code>.</p>
+  </div>
+
+
+  <!-- 9. SERVICE WORKER -->
+  <div class="sectie" id="sw">
+    <span class="sectie-label">PWA</span>
+    <h2>9. sw.js – offline werken</h2>
+
+    <p>Een service worker is een apart stukje JavaScript dat op de achtergrond draait. Het werkt als een tussenpersoon tussen de browser en het internet.</p>
+
+    <pre><code><span class="cmt">// Stap 1: registreer de service worker vanuit je pagina</span>
+<span class="kw">if</span> (<span class="str">'serviceWorker'</span> <span class="kw">in</span> navigator) {
+  navigator.serviceWorker.<span class="fn">register</span>(<span class="str">'/sw.js'</span>);
+}</code></pre>
+
+    <h3>Installatie – bestanden opslaan in cache</h3>
+    <pre><code><span class="kw">var</span> CACHE_NAAM = <span class="str">'gezondheid-v1'</span>;
+<span class="kw">var</span> BESTANDEN  = [<span class="str">'/index.html'</span>, <span class="str">'/css/style.css'</span>, <span class="str">'/js/opslag.js'</span>];
+
+self.<span class="fn">addEventListener</span>(<span class="str">'install'</span>, <span class="kw">function</span>(e) {
+  e.<span class="fn">waitUntil</span>(
+    caches.<span class="fn">open</span>(CACHE_NAAM).<span class="fn">then</span>(<span class="kw">function</span>(cache) {
+      <span class="kw">return</span> cache.<span class="fn">addAll</span>(BESTANDEN); <span class="cmt">// download en sla op</span>
+    })
+  );
+});</code></pre>
+
+    <h3>Fetch – gebruik cache als er geen internet is</h3>
+    <pre><code>self.<span class="fn">addEventListener</span>(<span class="str">'fetch'</span>, <span class="kw">function</span>(e) {
+  e.<span class="fn">respondWith</span>(
+    caches.<span class="fn">match</span>(e.request).<span class="fn">then</span>(<span class="kw">function</span>(cached) {
+      <span class="kw">return</span> cached || <span class="fn">fetch</span>(e.request);
+      <span class="cmt">// gebruik de cache — of als die er niet is: haal het van internet</span>
+    })
+  );
+});</code></pre>
+
+    <div class="tip">
+      <strong>Hoe test je offline?</strong> Open Chrome DevTools (F12) → tabblad "Application" → "Service Workers" → zet "Offline" aan. Ververs de pagina. Als alles goed is, werkt de app nog steeds.
+    </div>
+  </div>
+
+
+  <!-- 10. MANIFEST -->
+  <div class="sectie" id="manifest">
+    <span class="sectie-label">PWA</span>
+    <h2>10. manifest.json – installeerbaar maken</h2>
+
+    <p>Het manifest vertelt de browser hoe de app eruit moet zien als iemand hem installeert op zijn telefoon of pc.</p>
+
+    <pre><code>{
+  <span class="str">"name"</span>:             <span class="str">"Mijn Gezondheid"</span>,      <span class="cmt">// volledige naam</span>
+  <span class="str">"short_name"</span>:       <span class="str">"Gezondheid"</span>,          <span class="cmt">// naam op het homescreen</span>
+  <span class="str">"start_url"</span>:        <span class="str">"/index.html"</span>,         <span class="cmt">// welke pagina opent bij starten</span>
+  <span class="str">"display"</span>:          <span class="str">"standalone"</span>,          <span class="cmt">// zonder browser-balk tonen</span>
+  <span class="str">"background_color"</span>: <span class="str">"#ffffff"</span>,             <span class="cmt">// kleur tijdens laden</span>
+  <span class="str">"theme_color"</span>:      <span class="str">"#4CAF50"</span>,             <span class="cmt">// kleur van de statusbalk</span>
+  <span class="str">"icons"</span>: [
+    { <span class="str">"src"</span>: <span class="str">"/icons/icon-192.png"</span>, <span class="str">"sizes"</span>: <span class="str">"192x192"</span> },
+    { <span class="str">"src"</span>: <span class="str">"/icons/icon-512.png"</span>, <span class="str">"sizes"</span>: <span class="str">"512x512"</span> }
+  ]
+}</code></pre>
+
+    <table>
+      <tr><th>Veld</th><th>Wat het doet</th></tr>
+      <tr><td><code>display: standalone</code></td><td>App opent zonder adresbalk, ziet eruit als een echte app</td></tr>
+      <tr><td><code>display: browser</code></td><td>Opent gewoon in de browser</td></tr>
+      <tr><td><code>display: fullscreen</code></td><td>Volledig scherm, zonder statusbalk (voor games)</td></tr>
+      <tr><td><code>theme_color</code></td><td>Kleur van de balk bovenaan op Android</td></tr>
+    </table>
+
+    <div class="tip">
+      <strong>Controleren:</strong> open Chrome DevTools → tabblad "Application" → "Manifest". Hier zie je of alles correct geladen is en kun je de installeerknop testen.
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
